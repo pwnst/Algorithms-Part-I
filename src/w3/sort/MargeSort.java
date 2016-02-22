@@ -1,4 +1,4 @@
-package w3;
+package w3.sort;
 
 import java.util.Arrays;
 

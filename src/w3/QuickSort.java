@@ -1,5 +1,6 @@
 package w3;
 
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -20,25 +21,27 @@ public class QuickSort {
         }
     }
 
-    public static void partition(Comparable[] array, int lo, int hi) {
-        if (hi <= lo) {
-            return;
-        }
-        int i = lo+1;
-        int j = hi;
-        int k = lo;
-        while (j >= i) {
-            while (less(array[i], array[k])) {
-                i++;
+    public static int partition(Comparable[] array, int lo, int hi) {
+        int i = lo;
+        int j = hi+1;
+        while (true) {
+            while (less(array[++i], array[lo])) {
+                if (i == hi) {
+                    break;
+                }
             }
-            while (less(array[k], array[j])) {
-                j--;
+            while (less(array[lo], array[--j])) {
+                if (j == lo) {
+                    break;
+                }
+            }
+            if (i >= j) {
+                break;
             }
             swap(array, i, j);
         }
-        swap(array, k, i);
-        partition(array, k, i);
-        partition(array, i+1, j);
+        swap(array, lo, j);
+        return j;
     }
 
     private static boolean less(Comparable a, Comparable b) {
@@ -48,16 +51,26 @@ public class QuickSort {
         return false;
     }
 
+    public static void sort(Comparable[] array, int lo, int hi) {
+        if (hi <= lo) {
+            return;
+        }
+        int j = partition(array, lo, hi);
+/*        sort(array, lo, j-1);
+        sort(array, j+1, hi);*/
+    }
+
     public static void sort(Comparable[] array) {
         shuffle(array);
-        partition(array, 0, array.length-1);
+        sort(array, 0, array.length-1);
     }
 
     public static void main(String[] args) {
-        Integer[] c = new Integer[]{1,2,3,4,5,6,7,8,9,10,11,12};
+        Integer[] c = new Integer[]{1,2,22,33,3,4,5,6,7,8,9,10,11,12};
         Integer[] a = new Integer[]{1};
         Integer[] b = new Integer[]{2,1};
-        sort(b);
-        //System.out.println(less(c[1], c[2]));
+        String[] d = "B A B B A A B B B B B B".split(" ");
+        sort(d);
+        System.out.println(Arrays.toString(d));
     }
 }

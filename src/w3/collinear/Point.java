@@ -1,8 +1,7 @@
-package w3;
+package w3.collinear;
 
 import java.util.Comparator;
 
-import edu.princeton.cs.algs4.DoublingRatio;
 import edu.princeton.cs.algs4.StdDraw;
 
 public class Point implements Comparable<Point> {

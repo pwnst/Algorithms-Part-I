@@ -1,4 +1,4 @@
-package w3;
+package w3.collinear;
 
 /**
  * Created by atretyak on 22.02.16.

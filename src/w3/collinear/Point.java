@@ -112,6 +112,8 @@ public class Point implements Comparable<Point> {
      * Unit tests the Point data type.
      */
     public static void main(String[] args) {
-        /* YOUR CODE HERE */
+        Point point1 = new Point(10, 10);
+        Point point2 = new Point(10, 10);
+        System.out.println(point1.slopeTo(point2));
     }
 }

@@ -2,6 +2,7 @@ package w3.collinear;
 
 import java.util.Comparator;
 
+import edu.princeton.cs.algs4.DoublingRatio;
 import edu.princeton.cs.algs4.StdDraw;
 
 public class Point implements Comparable<Point> {
@@ -49,7 +50,16 @@ public class Point implements Comparable<Point> {
      * @return the slope between this point and the specified point
      */
     public double slopeTo(Point that) {
-        return (that.y - this.y) / (double) (that.x - this.x);
+        if (this.x == that.x) {
+            if (this.y == that.y) {
+                return Double.NEGATIVE_INFINITY;
+            }
+            return Double.POSITIVE_INFINITY;
+        }
+        if (this.y == that.y) {
+            return 0.0;
+        }
+        return (double) (that.y - this.y) / (that.x - this.x);
     }
 
     /**
@@ -68,7 +78,7 @@ public class Point implements Comparable<Point> {
         if (this.x == that.x && this.y == that.y) {
             return 0;
         }
-        if (this.x > that.x && this.y >= that.y) {
+        if (this.x > that.x) {
             return 1;
         }
         return -1;

@@ -21,7 +21,7 @@ public class BruteCollinearPoints {
     // finds all line segments containing 4 points
     public BruteCollinearPoints(Point[] points) {
         segments = new ArrayList<>();
-        //Arrays.sort(points);
+        Arrays.sort(points);
         for (int i = 0; i < points.length; i++) {
             for (int j = i+1; j < points.length; j++) {
                 for (int f = j+1; f < points.length; f++) {
@@ -58,11 +58,9 @@ public class BruteCollinearPoints {
 
     public static void main(String[] args) {
         // read the N points from a file
-/*        File file = new File("./data/input9.txt");
-        for(String fileNames : file.list()) System.out.println(fileNames);*/
         In in = new In(args[0]);
-
         int N = in.readInt();
+
         Point[] points = new Point[N];
         for (int i = 0; i < N; i++) {
             int x = in.readInt();

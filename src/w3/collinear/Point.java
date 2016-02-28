@@ -1,9 +1,9 @@
 package w3.collinear;
 
-import java.util.Comparator;
-
-import edu.princeton.cs.algs4.DoublingRatio;
 import edu.princeton.cs.algs4.StdDraw;
+
+import java.util.Arrays;
+import java.util.Comparator;
 
 public class Point implements Comparable<Point> {
 
@@ -50,7 +50,7 @@ public class Point implements Comparable<Point> {
      * @return the slope between this point and the specified point
      */
     public double slopeTo(Point that) {
-        if (this.x == that.x) {
+/*        if (this.x == that.x) {
             if (this.y == that.y) {
                 return Double.NEGATIVE_INFINITY;
             }
@@ -58,7 +58,8 @@ public class Point implements Comparable<Point> {
         }
         if (this.y == that.y) {
             return 0.0;
-        }
+        }*/
+        if (this.x == that.x && this.y == that.y) return 1.0;
         return (double) (that.y - this.y) / (that.x - this.x);
     }
 
@@ -75,11 +76,19 @@ public class Point implements Comparable<Point> {
      *         argument point
      */
     public int compareTo(Point that) {
-        if (this.x == that.x && this.y == that.y) {
-            return 0;
-        }
         if (this.x > that.x) {
             return 1;
+        }
+        else if (this.x == that.x) {
+            if(this.y > that.y) {
+                return 1;
+            }
+            else if (this.y == that.y) {
+                return 0;
+            }
+            else {
+                return -1;
+            }
         }
         return -1;
     }
@@ -94,13 +103,13 @@ public class Point implements Comparable<Point> {
         return new Comparator<Point>() {
             @Override
             public int compare(Point o1, Point o2) {
-                if (slopeTo(o1) > slopeTo(o2)) {
+                if (slopeTo(o1) < slopeTo(o2)) {
                     return 1;
                 }
-                if (slopeTo(o1) == slopeTo(o2)) {
-                    return 0;
+                if (slopeTo(o1) > slopeTo(o2)) {
+                    return -1;
                 }
-                return -1;
+                return 0;
             }
         };
     }
@@ -122,8 +131,17 @@ public class Point implements Comparable<Point> {
      * Unit tests the Point data type.
      */
     public static void main(String[] args) {
-        Point point1 = new Point(10, 10);
-        Point point2 = new Point(10, 10);
-        System.out.println(point1.slopeTo(point2));
+        Point point1 = new Point(3000, 7000);
+        Point point2 = new Point(0, 10000);
+        Point point3 = new Point(20000, 21000);
+        Point point4 = new Point(14000, 15000);
+        Point point5 = new Point(6000, 7000);
+        Point point6 = new Point(3000, 4000);
+        Point[] a = new Point[]{point1, point2, point3, point4, point5, point6};
+        for (Point p : a) {
+            System.out.println(p.slopeTo(point3));
+        }
+        /*Arrays.sort(a, comparator);*/
+        System.out.println(Arrays.toString(a));
     }
 }

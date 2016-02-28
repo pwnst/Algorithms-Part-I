@@ -4,13 +4,8 @@ import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
 
-import javax.sound.sampled.Line;
-import java.io.File;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Scanner;
 
 /**
  * Created by atretyak on 22.02.16.
@@ -35,15 +30,6 @@ public class BruteCollinearPoints {
                 }
             }
         }
-/*        for (int i = 0; i < points.length-4; i++) {
-            double p1 = points[i].slopeTo(points[i+1]);
-            double p2 = points[i+1].slopeTo(points[i+2]);
-            double p3 = points[i+2].slopeTo(points[i+3]);
-            if ((p1 == p2) && (p2 == p3)) {
-                LineSegment line = new LineSegment(points[i], points[i+3]);
-                segments.add(line);
-            }
-        }*/
     }
 
     // the number of line segments

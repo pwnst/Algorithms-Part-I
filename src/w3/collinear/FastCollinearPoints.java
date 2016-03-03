@@ -3,34 +3,65 @@ package w3.collinear;
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
+import w3.collinear.LineSegment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 
 /**
  * Created by atretyak on 25.02.16.
  */
 public class FastCollinearPoints {
-    ArrayList<LineSegment> segments;
+    private ArrayList<LineSegment> segments;
 
     // finds all line segments containing 4 or more points
     public FastCollinearPoints(Point[] points) {
+        HashSet<String> ppp = new HashSet<>();
+        for (int i = 0; i < points.length; i++) {
+            if (!ppp.contains(points[i].toString())) {
+                ppp.add(points[i].toString());
+            } else {
+                throw new IllegalArgumentException();
+            }
+        }
         segments = new ArrayList<>();
         for (int i = 0; i < points.length; i++) {
             Point[] tmp = points.clone();
             Arrays.sort(tmp, tmp[i].slopeOrder());
-            System.out.println(Arrays.toString(tmp));
-            double slope = tmp[i].slopeTo(tmp[1]);
-/*            for (int j = 4; j < tmp.length; j++) {
-                if (slope != tmp[2].slopeTo(tmp[3])) {
-                    break;
+            ArrayList<Point> lineArray = new ArrayList<>();
+            lineArray.add(tmp[0]);
+            int count = 1;
+            boolean found = false;
+            for (int j = 1; j < tmp.length; j++) {
+                boolean correctPoint = points[i].slopeOrder().compare(tmp[j-1], tmp[j]) == 0;
+                if (correctPoint) {
+                    lineArray.add(tmp[j]);
+                    count++;
+                    found = true;
                 }
-                if (slope != tmp[j].slopeTo(tmp[j-1])) {
-                    Arrays.sort(tmp, 0, j);
-                    segments.add(new LineSegment(tmp[0], tmp[j-1]));
-                    break;
+                if (!correctPoint && found) {
+                    if (count >= 3) {
+                        Collections.sort(lineArray);
+                        segments.add(new LineSegment(lineArray.get(0), lineArray.get(lineArray.size()-1)));
+                        lineArray.clear();
+                    }
+                    found = false;
+                    lineArray.clear();
+                    lineArray.add(tmp[0]);
+                    count = 1;
                 }
-            }*/
+                if (count >= 3) {
+                    Collections.sort(lineArray);
+                    segments.add(new LineSegment(lineArray.get(0), lineArray.get(lineArray.size()-1)));
+                    lineArray.clear();
+                    found = false;
+                    lineArray.clear();
+                    lineArray.add(tmp[0]);
+                    count = 1;
+                }
+            }
         }
     }
 
@@ -40,8 +71,12 @@ public class FastCollinearPoints {
     }
 
     // the line segments
-    public ArrayList<LineSegment> segments() {
-        return segments;
+    public LineSegment[] segments() {
+        LineSegment[] s = new LineSegment[segments.size()];
+        for (int i = 0; i < segments.size(); i++) {
+            s[i] = segments.get(i);
+        }
+        return s;
     }
 
     public static void main(String[] args) {

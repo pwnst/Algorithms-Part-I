@@ -6,15 +6,24 @@ import edu.princeton.cs.algs4.StdOut;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 
 /**
  * Created by atretyak on 22.02.16.
  */
 public class BruteCollinearPoints {
-    ArrayList<LineSegment> segments;
+    private ArrayList<LineSegment> segments;
 
     // finds all line segments containing 4 points
     public BruteCollinearPoints(Point[] points) {
+        HashSet<String> ppp = new HashSet<>();
+        for (int i = 0; i < points.length; i++) {
+            if (!ppp.contains(points[i].toString())) {
+                ppp.add(points[i].toString());
+            } else {
+                throw new IllegalArgumentException();
+            }
+        }
         segments = new ArrayList<>();
         Arrays.sort(points);
         for (int i = 0; i < points.length; i++) {
@@ -38,8 +47,12 @@ public class BruteCollinearPoints {
     }
 
     // the line segments
-    public ArrayList<LineSegment> segments() {
-        return segments;
+    public LineSegment[] segments() {
+        LineSegment[] s = new LineSegment[segments.size()];
+        for (int i = 0; i < segments.size(); i++) {
+            s[i] = segments.get(i);
+        }
+        return s;
     }
 
     public static void main(String[] args) {

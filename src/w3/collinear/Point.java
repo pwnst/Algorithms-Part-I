@@ -1,5 +1,6 @@
 package w3.collinear;
 
+import edu.princeton.cs.algs4.DoublingRatio;
 import edu.princeton.cs.algs4.StdDraw;
 
 import java.util.Arrays;
@@ -50,17 +51,18 @@ public class Point implements Comparable<Point> {
      * @return the slope between this point and the specified point
      */
     public double slopeTo(Point that) {
-/*        if (this.x == that.x) {
-            if (this.y == that.y) {
-                return Double.NEGATIVE_INFINITY;
-            }
-            return Double.POSITIVE_INFINITY;
+        if (that.equals(null)) {
+            throw new NullPointerException();
         }
-        if (this.y == that.y) {
+
+        if (this.x == that.x && this.y != that.y) {
+            return Double.POSITIVE_INFINITY;
+        } else if (this.x == that.x && this.y == that.y) {
+            return Double.NEGATIVE_INFINITY;
+        } else if (that.y == this.y && that.x != this.x) {
             return 0.0;
-        }*/
-        if (this.x == that.x && this.y == that.y) return 1.0;
-        return (double) (that.y - this.y) / (that.x - this.x);
+        }
+        return ((double)(that.y - this.y) / (double)(that.x - this.x));
     }
 
     /**
@@ -76,6 +78,9 @@ public class Point implements Comparable<Point> {
      *         argument point
      */
     public int compareTo(Point that) {
+        if (that.equals(null)) {
+            throw new NullPointerException();
+        }
         if (this.x > that.x) {
             return 1;
         }
@@ -103,10 +108,13 @@ public class Point implements Comparable<Point> {
         return new Comparator<Point>() {
             @Override
             public int compare(Point o1, Point o2) {
-                if (slopeTo(o1) < slopeTo(o2)) {
-                    return 1;
+                if (o1.equals(null) || o2.equals(null)) {
+                    throw new NullPointerException();
                 }
                 if (slopeTo(o1) > slopeTo(o2)) {
+                    return 1;
+                }
+                if (slopeTo(o1) < slopeTo(o2)) {
                     return -1;
                 }
                 return 0;
@@ -131,17 +139,36 @@ public class Point implements Comparable<Point> {
      * Unit tests the Point data type.
      */
     public static void main(String[] args) {
-        Point point1 = new Point(3000, 7000);
+/*        Point point1 = new Point(3000, 7000);
         Point point2 = new Point(0, 10000);
         Point point3 = new Point(20000, 21000);
         Point point4 = new Point(14000, 15000);
         Point point5 = new Point(6000, 7000);
         Point point6 = new Point(3000, 4000);
-        Point[] a = new Point[]{point1, point2, point3, point4, point5, point6};
-        for (Point p : a) {
-            System.out.println(p.slopeTo(point3));
+        Point point7 = new Point(0,  10000);
+        Point point8 = new Point(7000,  3000);*/
+        Point point1 = new Point(1, 1);
+        Point point2 = new Point(2, 1);
+        Point point3 = new Point(3, 1);
+        Point point4 = new Point(4, 1);
+        Point point5 = new Point(4, 2);
+        Point point6 = new Point(4, 3);
+        Point point7 = new Point(4, 4);
+        Point point8 = new Point(4, 5);
+        Point[] a = new Point[]{point1, point2, point3, point4, point5, point6, point7, point8};
+        Double[] b = new Double[a.length];
+        Point point = point4;
+        System.out.println(point.slopeOrder().compare(point6, point5));
+        for (int i = 0; i < a.length; i++) {
+            b[i] = point.slopeTo(a[i]);
         }
-        /*Arrays.sort(a, comparator);*/
         System.out.println(Arrays.toString(a));
+        Arrays.sort(a, point.slopeOrder());
+        System.out.println(Arrays.toString(b));
+        System.out.println(Arrays.toString(a));
+        for (int i = 0; i < a.length; i++) {
+            b[i] = point.slopeTo(a[i]);
+        }
+        System.out.println(Arrays.toString(b));
     }
 }

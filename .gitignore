@@ -1,7 +1,4 @@
-*.jar
-*.png
-*.html
-*.class
-build/
+.idea/
+target/
 out/
-driver/
+*.iml

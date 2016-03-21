@@ -1,36 +1,36 @@
 package w4;
 
-import java.util.Arrays;
-
 /**
  * Created by atretyak on 21.03.16.
  */
 public class Board {
     private int[][] blocks;
-    private int iLen;
-    private int jLen;
+    private int moves;
+    private int iSize;
+    private int jSize;
 
     public Board(int[][] blocks) {
-        iLen = blocks.length;
-        jLen = blocks[0].length;
-        this.blocks = new int[iLen][jLen];
-        for (int i = 0; i < iLen; i++) {
-            for (int j = 0; j < jLen; j++) {
+        iSize = blocks.length;
+        jSize = blocks[0].length;
+        this.blocks = new int[iSize][jSize];
+        for (int i = 0; i < iSize; i++) {
+            for (int j = 0; j < jSize; j++) {
                 this.blocks[i][j] = blocks[i][j];
             }
         }
     }
 
     public int dimension() {
-        return blocks.length * blocks[0].length;
+        return iSize * jSize;
     }
+
     public int hamming()                   // number of blocks out of place
     {
         int count = 0;
-        for (int i = 0; i < iLen; i++) {
-            for (int j = 0; j < jLen; j++) {
+        for (int i = 0; i < iSize; i++) {
+            for (int j = 0; j < jSize; j++) {
                 int value = blocks[i][j];
-                int position = i * iLen + j;
+                int position = i * iSize + j;
                 if (value != 0) {
                     if (value != position + 1) {
                         count++;
@@ -42,7 +42,20 @@ public class Board {
     }
     public int manhattan()                 // sum of Manhattan distances between blocks and goal
     {
-        return 1;
+        int count = 0;
+        for (int i = 0; i < iSize; i++) {
+            for (int j = 0; j < jSize; j++) {
+                int value = blocks[i][j];
+                int position = i * iSize + j;
+                int expectedPositionRow = (value - 1) / iSize;
+                int expectedPositionColumn = (value - 1) % jSize;
+                if (value != 0) {
+                    count += Math.abs(i - expectedPositionRow) +
+                            Math.abs(j - expectedPositionColumn);
+                }
+            }
+        }
+        return count;
     }
     public boolean isGoal()                // is this board the goal board?
     {
@@ -71,6 +84,7 @@ public class Board {
         int[][] a = new int[][]{new int[]{8, 1, 3}, new int[]{4, 0, 2}, new int[]{7, 6, 5}};
         Board b = new Board(a);
         System.out.println(b.hamming());
+        System.out.println(b.manhattan());
     }
 
 }

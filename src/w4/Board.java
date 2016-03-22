@@ -1,16 +1,15 @@
 package w4;
 
-import edu.princeton.cs.algs4.RandomSeq;
 import edu.princeton.cs.algs4.StdRandom;
 
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by atretyak on 21.03.16.
  */
 public class Board {
     private int[][] blocks;
-    private int[][] goal;
     private int moves;
     private int iSize;
     private int jSize;
@@ -19,15 +18,11 @@ public class Board {
         iSize = blocks.length;
         jSize = blocks[0].length;
         this.blocks = new int[iSize][jSize];
-        this.goal = new int[iSize][jSize];
         for (int i = 0; i < iSize; i++) {
             for (int j = 0; j < jSize; j++) {
-                int position = i * iSize + j;
                 this.blocks[i][j] = blocks[i][j];
-                this.goal[i][j] = position + 1;
             }
         }
-        this.goal[iSize-1][jSize-1] = 0;
     }
 
     public int dimension() {
@@ -81,28 +76,109 @@ public class Board {
     }
 
     public Board twin() {
-
-        return null;
+        Board newBoard = new Board(this.blocks);
+        int[] swapPos = generatePositions();
+        newBoard.swap(swapPos[0], swapPos[1], swapPos[2], swapPos[3]);
+        return newBoard;
     }
 
-    private int generatePos() {
-        int pos1 = StdRandom.uniform(0, dimension());
-        int direction = StdRandom.uniform(0, 4);
-        return -1;
+    private void swap(int i, int j, int ii, int jj) {
+        int tmp = blocks[i][j];
+        blocks[i][j] = blocks[ii][jj];
+        blocks[ii][jj] = tmp;
     }
 
-    private boolean validate() {
-        return true;
+    private int[] generateFirstPos() {
+        int posFirst = StdRandom.uniform(dimension());
+        int posFirstRow = posFirst / iSize;
+        int posFirstColumn = posFirst % jSize;
+        return new int[]{posFirstRow, posFirstColumn};
     }
 
-    public boolean equals(Object y)        // does this board equal y?
-    {
-        return true;
+    private int[] generatePositions() {
+        int i = 0;
+        int j = 0;
+
+        int ii = 0;
+        int jj = 0;
+
+        while (true) {
+            int[] firstPos = generateFirstPos();
+            i = firstPos[0];
+            j = firstPos[1];
+            if (blocks[i][j] != 0) {
+                break;
+            }
+
+        }
+
+        int[][] sides = new int[4][];
+        int count = 0;
+
+        if (i != 0 && blocks[i-1][j] != 0) {
+            sides[count++] = new int[]{i-1,j};
+        }
+        if (i != iSize-1 && blocks[i+1][j] != 0) {
+            sides[count++] = new int[]{i+1,j};
+        }
+        if (j != 0 && blocks[i][j-1] != 0) {
+            sides[count++] = new int[]{i,j-1};
+        }
+        if (j != jSize-1 && blocks[i][j+1] != 0) {
+            sides[count++] = new int[]{i,j+1};
+        }
+
+        int[] secondPos = sides[StdRandom.uniform(count)];
+        ii = secondPos[0];
+        jj = secondPos[1];
+
+        return new int[]{i, j, ii, jj};
     }
-    public Iterable<Board> neighbors()     // all neighboring boards
-    {
-        return null;
+
+    public boolean equals(Object y) {
+        Board yB = (Board) y;
+        return Arrays.deepEquals(blocks, yB.blocks);
     }
+
+    public Iterable<Board> neighbors() {
+        int i = 0;
+        int j = 0;
+        for (int row = 0; row < iSize; row++) {
+            for (int col = 0; col < jSize; col++) {
+                if (blocks[row][col] == 0) {
+                    i = row;
+                    j = col;
+                }
+            }
+        }
+
+        int[][] sides = new int[4][];
+        int count = 0;
+
+        if (i != 0) {
+            sides[count++] = new int[]{i-1,j};
+        }
+        if (i != iSize-1) {
+            sides[count++] = new int[]{i+1,j};
+        }
+        if (j != 0) {
+            sides[count++] = new int[]{i,j-1};
+        }
+        if (j != jSize-1) {
+            sides[count++] = new int[]{i,j+1};
+        }
+
+        ArrayList<Board> neighborsArrayList = new ArrayList<>();
+
+        for (int b = 0; b < count; b++) {
+            Board newBoard = new Board(this.blocks);
+            newBoard.swap(i, j, sides[b][0], sides[b][1]);
+            neighborsArrayList.add(newBoard);
+        }
+
+        return neighborsArrayList;
+    }
+
     public String toString() {
         StringBuilder s = new StringBuilder();
         s.append("\n");
@@ -117,14 +193,15 @@ public class Board {
 
     public static void main(String[] args) // unit tests (not graded)
     {
-        int[][] a = new int[][]{new int[]{8, 1, 3}, new int[]{4, 0, 2}, new int[]{7, 6, 5}};
+        int[][] y = new int[][]{new int[]{8, 1, 3}, new int[]{4, 0, 2}, new int[]{7, 6, 5}};
         int[][] z = new int[][]{new int[]{1, 2, 3}, new int[]{4, 5, 6}, new int[]{7, 8, 0}};
-        Board b = new Board(a);
-        System.out.println(b.hamming());
-        System.out.println(b.manhattan());
-        System.out.println(b.goal[0][0]);
-        System.out.println(b.isGoal());
-        System.out.println(StdRandom.uniform(1,2));
+        int[][] x = new int[][]{new int[]{0, 0, 0}, new int[]{0, 0, 0}, new int[]{7, 8, 0}};
+        Board a = new Board(z);
+        Board b = new Board(z);
+        System.out.println(a);
+        for (Board bb : a.neighbors()) {
+            System.out.println(bb);
+        }
     }
 
 }

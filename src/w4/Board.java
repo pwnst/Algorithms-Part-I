@@ -11,30 +11,28 @@ import java.util.Arrays;
 public class Board {
     private int[][] blocks;
     private int moves;
-    private int iSize;
-    private int jSize;
+    private int N;
 
     public Board(int[][] blocks) {
-        iSize = blocks.length;
-        jSize = blocks[0].length;
-        this.blocks = new int[iSize][jSize];
-        for (int i = 0; i < iSize; i++) {
-            for (int j = 0; j < jSize; j++) {
+        N = blocks.length;
+        this.blocks = new int[N][N];
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
                 this.blocks[i][j] = blocks[i][j];
             }
         }
     }
 
     public int dimension() {
-        return iSize * jSize;
+        return N * N;
     }
 
     public int hamming() {
         int count = 0;
-        for (int i = 0; i < iSize; i++) {
-            for (int j = 0; j < jSize; j++) {
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
                 int value = blocks[i][j];
-                int position = i * iSize + j;
+                int position = i * N + j;
                 if (value != 0) {
                     if (value != position + 1) {
                         count++;
@@ -47,12 +45,12 @@ public class Board {
 
     public int manhattan() {
         int count = 0;
-        for (int i = 0; i < iSize; i++) {
-            for (int j = 0; j < jSize; j++) {
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
                 int value = blocks[i][j];
-                int position = i * iSize + j;
-                int expectedPositionRow = (value - 1) / iSize;
-                int expectedPositionColumn = (value - 1) % jSize;
+                int position = i * N + j;
+                int expectedPositionRow = (value - 1) / N;
+                int expectedPositionColumn = (value - 1) % N;
                 if (value != 0) {
                     count += Math.abs(i - expectedPositionRow) +
                             Math.abs(j - expectedPositionColumn);
@@ -62,11 +60,11 @@ public class Board {
         return count;
     }
     public boolean isGoal() {
-        for (int i = 0; i < iSize; i++) {
-            for (int j = 0; j < jSize; j++) {
-                int position = i * iSize + j;
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                int position = i * N + j;
                 if (blocks[i][j] != position + 1) {
-                    if (i != iSize-1 && j != jSize) {
+                    if (i != N -1 && j != N) {
                         return false;
                     }
                 }
@@ -90,8 +88,8 @@ public class Board {
 
     private int[] generateFirstPos() {
         int posFirst = StdRandom.uniform(dimension());
-        int posFirstRow = posFirst / iSize;
-        int posFirstColumn = posFirst % jSize;
+        int posFirstRow = posFirst / N;
+        int posFirstColumn = posFirst % N;
         return new int[]{posFirstRow, posFirstColumn};
     }
 
@@ -118,13 +116,13 @@ public class Board {
         if (i != 0 && blocks[i-1][j] != 0) {
             sides[count++] = new int[]{i-1,j};
         }
-        if (i != iSize-1 && blocks[i+1][j] != 0) {
+        if (i != N -1 && blocks[i+1][j] != 0) {
             sides[count++] = new int[]{i+1,j};
         }
         if (j != 0 && blocks[i][j-1] != 0) {
             sides[count++] = new int[]{i,j-1};
         }
-        if (j != jSize-1 && blocks[i][j+1] != 0) {
+        if (j != N -1 && blocks[i][j+1] != 0) {
             sides[count++] = new int[]{i,j+1};
         }
 
@@ -143,8 +141,8 @@ public class Board {
     public Iterable<Board> neighbors() {
         int i = 0;
         int j = 0;
-        for (int row = 0; row < iSize; row++) {
-            for (int col = 0; col < jSize; col++) {
+        for (int row = 0; row < N; row++) {
+            for (int col = 0; col < N; col++) {
                 if (blocks[row][col] == 0) {
                     i = row;
                     j = col;
@@ -158,13 +156,13 @@ public class Board {
         if (i != 0) {
             sides[count++] = new int[]{i-1,j};
         }
-        if (i != iSize-1) {
+        if (i != N -1) {
             sides[count++] = new int[]{i+1,j};
         }
         if (j != 0) {
             sides[count++] = new int[]{i,j-1};
         }
-        if (j != jSize-1) {
+        if (j != N -1) {
             sides[count++] = new int[]{i,j+1};
         }
 
@@ -182,8 +180,8 @@ public class Board {
     public String toString() {
         StringBuilder s = new StringBuilder();
         s.append("\n");
-        for (int i = 0; i < iSize; i++) {
-            for (int j = 0; j < jSize; j++) {
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
                 s.append(blocks[i][j] + " ");
             }
             s.append("\n");

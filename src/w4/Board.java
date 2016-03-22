@@ -170,6 +170,7 @@ public class Board {
 
         for (int b = 0; b < count; b++) {
             Board newBoard = new Board(this.blocks);
+            newBoard.moves = this.moves + 1;
             newBoard.swap(i, j, sides[b][0], sides[b][1]);
             neighborsArrayList.add(newBoard);
         }
@@ -198,7 +199,9 @@ public class Board {
         Board b = new Board(z);
         System.out.println(a);
         for (Board bb : a.neighbors()) {
-            System.out.println(bb);
+            for (Board bbb : bb.neighbors()) {
+                System.out.println(bbb.moves);
+            }
         }
     }
 

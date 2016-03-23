@@ -9,15 +9,24 @@ import java.util.HashSet;
 
 public class Board {
     private int[][] blocks;
-    private int moves;
+    private int moves = 0;
     private int N;
     private Board parent;
 
     public Board(int[][] blocks) {
+        if (blocks == null) {
+            throw new java.lang.NullPointerException();
+        }
+        if (blocks.length != blocks[0].length) {
+            throw new IllegalArgumentException();
+        }
         N = blocks.length;
         this.blocks = new int[N][N];
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
+                if (blocks[i][j] < 0 || blocks[i][j] > N * N - 1) {
+                    throw new IllegalArgumentException();
+                }
                 this.blocks[i][j] = blocks[i][j];
             }
         }
@@ -40,7 +49,7 @@ public class Board {
                 }
             }
         }
-        return count;
+        return count + moves;
     }
 
     public int manhattan() {
@@ -57,14 +66,16 @@ public class Board {
                 }
             }
         }
-        return count;
+        return count + moves;
     }
     public boolean isGoal() {
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
                 int position = i * N + j;
                 if (blocks[i][j] != position + 1) {
-                    if (i != N -1 && j != N) {
+                    if (i == N - 1 && j == N -1) {
+                        return true;
+                    } else {
                         return false;
                     }
                 }
@@ -139,10 +150,10 @@ public class Board {
         return Arrays.deepEquals(blocks, yB.blocks);
     }
 
-    @Override
-    public int hashCode() {
-        return java.util.Arrays.deepHashCode(this.blocks);
-    }
+    //@Override
+    //public int hashCode() {
+    //    return java.util.Arrays.deepHashCode(this.blocks);
+    //}
 
     public Iterable<Board> neighbors() {
         int i = 0;
@@ -183,14 +194,6 @@ public class Board {
         }
 
         return neighborsArrayList;
-    }
-
-    public int getMoves() {
-        return this.moves;
-    }
-
-    public Board getParent() {
-        return this.parent;
     }
 
     public String toString() {

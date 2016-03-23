@@ -4,14 +4,14 @@ import edu.princeton.cs.algs4.StdRandom;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 
-/**
- * Created by atretyak on 21.03.16.
- */
+
 public class Board {
     private int[][] blocks;
     private int moves;
     private int N;
+    private Board parent;
 
     public Board(int[][] blocks) {
         N = blocks.length;
@@ -133,9 +133,15 @@ public class Board {
         return new int[]{i, j, ii, jj};
     }
 
+    @Override
     public boolean equals(Object y) {
         Board yB = (Board) y;
         return Arrays.deepEquals(blocks, yB.blocks);
+    }
+
+    @Override
+    public int hashCode() {
+        return java.util.Arrays.deepHashCode(this.blocks);
     }
 
     public Iterable<Board> neighbors() {
@@ -171,11 +177,20 @@ public class Board {
         for (int b = 0; b < count; b++) {
             Board newBoard = new Board(this.blocks);
             newBoard.moves = this.moves + 1;
+            newBoard.parent = this;
             newBoard.swap(i, j, sides[b][0], sides[b][1]);
             neighborsArrayList.add(newBoard);
         }
 
         return neighborsArrayList;
+    }
+
+    public int getMoves() {
+        return this.moves;
+    }
+
+    public Board getParent() {
+        return this.parent;
     }
 
     public String toString() {
@@ -197,12 +212,17 @@ public class Board {
         int[][] x = new int[][]{new int[]{0, 0, 0}, new int[]{0, 0, 0}, new int[]{7, 8, 0}};
         Board a = new Board(z);
         Board b = new Board(z);
-        System.out.println(a);
-        for (Board bb : a.neighbors()) {
+        System.out.println(java.util.Arrays.deepHashCode(a.blocks));
+        System.out.println(java.util.Arrays.deepHashCode(b.blocks));
+        HashSet<Board> h = new HashSet<>();
+        h.add(a);
+        h.add(b);
+        System.out.println(h);
+        /*for (Board bb : a.neighbors()) {
             for (Board bbb : bb.neighbors()) {
                 System.out.println(bbb.moves);
             }
-        }
+        }*/
     }
 
 }

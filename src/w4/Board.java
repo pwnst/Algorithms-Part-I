@@ -9,9 +9,9 @@ import java.util.HashSet;
 
 public class Board {
     private int[][] blocks;
-    private int moves = 0;
     private int N;
-    private Board parent;
+    private int hamming;
+    private int manhattan;
 
     public Board(int[][] blocks) {
         if (blocks == null) {
@@ -30,13 +30,19 @@ public class Board {
                 this.blocks[i][j] = blocks[i][j];
             }
         }
+        manhattan = calcManhattan();
+        hamming = calcHamming();
     }
 
     public int dimension() {
-        return N * N;
+        return N;
     }
 
     public int hamming() {
+        return hamming;
+    }
+
+    private int calcHamming() {
         int count = 0;
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
@@ -49,10 +55,14 @@ public class Board {
                 }
             }
         }
-        return count + moves;
+        return count;
     }
 
     public int manhattan() {
+        return manhattan;
+    }
+
+    private int calcManhattan() {
         int count = 0;
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
@@ -66,8 +76,9 @@ public class Board {
                 }
             }
         }
-        return count + moves;
+        return count;
     }
+
     public boolean isGoal() {
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
@@ -187,8 +198,6 @@ public class Board {
 
         for (int b = 0; b < count; b++) {
             Board newBoard = new Board(this.blocks);
-            newBoard.moves = this.moves + 1;
-            newBoard.parent = this;
             newBoard.swap(i, j, sides[b][0], sides[b][1]);
             neighborsArrayList.add(newBoard);
         }
@@ -198,10 +207,11 @@ public class Board {
 
     public String toString() {
         StringBuilder s = new StringBuilder();
+        s.append(N);
         s.append("\n");
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                s.append(blocks[i][j] + " ");
+                s.append(String.format("%2d ", blocks[i][j]));
             }
             s.append("\n");
         }
@@ -214,6 +224,8 @@ public class Board {
         int[][] z = new int[][]{new int[]{1, 2, 3}, new int[]{4, 5, 6}, new int[]{7, 8, 0}};
         int[][] x = new int[][]{new int[]{0, 0, 0}, new int[]{0, 0, 0}, new int[]{7, 8, 0}};
         Board a = new Board(z);
+        System.out.println(a.hamming());
+
         Board b = new Board(z);
         System.out.println(java.util.Arrays.deepHashCode(a.blocks));
         System.out.println(java.util.Arrays.deepHashCode(b.blocks));

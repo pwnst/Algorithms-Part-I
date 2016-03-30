@@ -3,9 +3,7 @@ package w4;
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.MinPQ;
 import edu.princeton.cs.algs4.StdOut;
-
 import java.util.ArrayList;
-import java.util.Stack;
 
 
 public class Solver {
@@ -48,7 +46,7 @@ public class Solver {
         if (initial == null) {
             throw new java.lang.NullPointerException();
         }
-        moves = -1;
+        moves = 0;
         isSolved = false;
         isSolvedTwin = false;
         queue = new MinPQ<>();
@@ -95,7 +93,7 @@ public class Solver {
     }
 
     public int moves() {
-        if (moves == -1) {
+        if (moves == 0) {
             solution();
         }
         return moves;
@@ -113,6 +111,7 @@ public class Solver {
                 //result.add(current.board);
                 current = current.parent;
             }
+            result.add(0, current.board);
             return result;
         } else {
             return null;

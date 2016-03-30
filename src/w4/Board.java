@@ -157,6 +157,14 @@ public class Board {
 
     @Override
     public boolean equals(Object y) {
+        if (y == null) {
+            throw new NullPointerException();
+        }
+        try {
+            Board yB = (Board) y;
+        } catch (Exception e) {
+
+        }
         Board yB = (Board) y;
         return Arrays.deepEquals(blocks, yB.blocks);
     }

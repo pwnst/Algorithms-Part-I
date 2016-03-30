@@ -1,6 +1,7 @@
 package w5;
 
 import edu.princeton.cs.algs4.Point2D;
+import edu.princeton.cs.algs4.Queue;
 import edu.princeton.cs.algs4.RectHV;
 
 
@@ -9,7 +10,6 @@ public class KdTree {
     private int size;
 
     public KdTree() {
-
     }
 
     public boolean isEmpty() {
@@ -28,18 +28,8 @@ public class KdTree {
         if (node == null) {
             size++;
             return new Node(p);
-        } else if (level % 2 == 0) {
-            int cmp = Double.compare(p.x(), node.p.x());
-            if (cmp > 0) {
-                node.rt = insert(node.rt, p, ++level);
-            } else if (cmp < 0) {
-                node.lb = insert(node.lb, p, ++level);
-            } else {
-                node.p = p;
-                return node;
-            }
         } else {
-            int cmp = Double.compare(p.y(), node.p.y());
+            int cmp = (level % 2 == 0) ? Double.compare(p.x(), node.p.x()) : Double.compare(p.y(), node.p.y());
             if (cmp > 0) {
                 node.rt = insert(node.rt, p, ++level);
             } else if (cmp < 0) {
@@ -53,14 +43,44 @@ public class KdTree {
     }
 
     public boolean contains(Point2D p) {
-        return true;
+        Node node = root;
+        int level = 0;
+        while (node != null) {
+            if (node.p.equals(p)) {
+                return true;
+            }
+            int cmp = (level % 2 == 0) ? Double.compare(p.x(), node.p.x()) : Double.compare(p.y(), node.p.y());
+            if (cmp > 0) {
+                node = node.rt;
+                level++;
+            } else if (cmp < 0) {
+                node = node.lb;
+                level++;
+            } else {
+                level++;
+            }
+        }
+        return false;
     }
 
     public void draw() {
-
+        Queue<Node> queue = new Queue<>();
+        queue.enqueue(root);
+        while (!queue.isEmpty()) {
+            Node current = queue.dequeue();
+            current.p.draw();
+            if (current.lb != null) {
+                queue.enqueue(current.lb);
+            }
+            if (current.rt != null) {
+                queue.enqueue(current.rt);
+            }
+        }
     }
 
+
     public Iterable<Point2D> range(RectHV rect) {
+        rect.
         return null;
     }
 
@@ -86,7 +106,9 @@ public class KdTree {
         kdTree.insert(new Point2D(1,133));
         kdTree.insert(new Point2D(1,2));
         kdTree.insert(new Point2D(1,133));
+        System.out.println(kdTree.contains(new Point2D(2,1)));
         System.out.println(kdTree.root.lb.lb.p.y());
         System.out.println(kdTree.size());
+        kdTree.draw();
     }
 }

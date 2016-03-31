@@ -16,9 +16,9 @@ import edu.princeton.cs.algs4.StdOut;
 public class KdTreeVisualizer {
 
     public static void main(String[] args) {
-        RectHV rect = new RectHV(0.0, 0.0, 0.01, 0.01);
+        RectHV rect = new RectHV(0.0, 0.0, 1, 1);
         StdDraw.show(0);
-        //KdTree kdtree = new KdTree();
+        KdTree kdtree = new KdTree();
         PointSET ps = new PointSET();
         while (true) {
             if (StdDraw.mousePressed()) {
@@ -29,9 +29,9 @@ public class KdTreeVisualizer {
                 if (rect.contains(p)) {
                     StdOut.printf("%8.6f %8.6f\n", x, y);
                     ps.insert(p);
-                    //kdtree.insert(p);
+                    kdtree.insert(p);
                     StdDraw.clear();
-                    //kdtree.draw();
+                    kdtree.draw();
                     ps.draw();
                 }
             }

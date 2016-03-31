@@ -21,19 +21,40 @@ public class KdTree {
     }
 
     public void insert(Point2D p) {
-        root = insert(root, p, 0);
+        root = insert(root, null, p, 0);
     }
 
-    private Node insert(Node node, Point2D p, int level) {
+    private Node insert(Node node, Node parent, Point2D p, int level) {
         if (node == null) {
             size++;
-            return new Node(p);
+            Node newNode = new Node(p);
+            if (parent == null) {
+                newNode.rect = new RectHV(0, 0, 1, 1);
+            } else {
+                boolean prevAxisX = (level % 2 == 1) ? true : false;
+                if (prevAxisX) {
+                    boolean right = (p.x() > parent.p.x()) ? true : false;
+                    if (right) {
+                        newNode.rect = new RectHV(parent.p.x(), parent.rect.ymin(), parent.rect.xmax(), parent.rect.ymax());
+                    } else {
+                        newNode.rect = new RectHV(parent.rect.xmin(), parent.rect.ymin(), parent.p.x(), parent.rect.ymax());
+                    }
+                } else {
+                    boolean top = (p.y() > parent.p.y()) ? true : false;
+                    if (top) {
+                        newNode.rect = new RectHV(parent.rect.xmin(), parent.p.y(), parent.rect.xmax(), parent.rect.ymax());
+                    } else {
+                        newNode.rect = new RectHV(parent.rect.xmin(), parent.rect.ymin(), parent.rect.xmax(), parent.p.y());
+                    }
+                }
+            }
+            return newNode;
         } else {
             int cmp = (level % 2 == 0) ? Double.compare(p.x(), node.p.x()) : Double.compare(p.y(), node.p.y());
             if (cmp > 0) {
-                node.rt = insert(node.rt, p, ++level);
+                node.rt = insert(node.rt, node, p, ++level);
             } else if (cmp < 0) {
-                node.lb = insert(node.lb, p, ++level);
+                node.lb = insert(node.lb, node, p, ++level);
             } else {
                 node.p = p;
                 return node;
@@ -68,7 +89,7 @@ public class KdTree {
         queue.enqueue(root);
         while (!queue.isEmpty()) {
             Node current = queue.dequeue();
-            current.p.draw();
+            current.rect.draw();
             if (current.lb != null) {
                 queue.enqueue(current.lb);
             }
@@ -80,7 +101,6 @@ public class KdTree {
 
 
     public Iterable<Point2D> range(RectHV rect) {
-        rect.
         return null;
     }
 

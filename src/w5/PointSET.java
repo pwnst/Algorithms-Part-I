@@ -2,17 +2,15 @@ package w5;
 
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
-import edu.princeton.cs.algs4.StdDraw;
-import w3.collinear.Point;
 
 import java.util.ArrayList;
 import java.util.TreeSet;
 
 public class PointSET {
-    private TreeSet treeSet;
+    private TreeSet<Point2D> treeSet;
 
     public PointSET() {
-        treeSet = new TreeSet();
+        treeSet = new TreeSet<>();
     }
 
     public boolean isEmpty() {

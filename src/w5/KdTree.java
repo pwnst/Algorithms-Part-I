@@ -1,8 +1,8 @@
 package w5;
 
-import edu.princeton.cs.algs4.Point2D;
-import edu.princeton.cs.algs4.Queue;
-import edu.princeton.cs.algs4.RectHV;
+import edu.princeton.cs.algs4.*;
+
+import java.util.ArrayList;
 
 
 public class KdTree {
@@ -30,6 +30,7 @@ public class KdTree {
             Node newNode = new Node(p);
             if (parent == null) {
                 newNode.rect = new RectHV(0, 0, 1, 1);
+                newNode.red = true;
             } else {
                 boolean prevAxisX = (level % 2 == 1) ? true : false;
                 if (prevAxisX) {
@@ -39,6 +40,7 @@ public class KdTree {
                     } else {
                         newNode.rect = new RectHV(parent.rect.xmin(), parent.rect.ymin(), parent.p.x(), parent.rect.ymax());
                     }
+                    newNode.red = false;
                 } else {
                     boolean top = (p.y() > parent.p.y()) ? true : false;
                     if (top) {
@@ -46,6 +48,7 @@ public class KdTree {
                     } else {
                         newNode.rect = new RectHV(parent.rect.xmin(), parent.rect.ymin(), parent.rect.xmax(), parent.p.y());
                     }
+                    newNode.red = true;
                 }
             }
             return newNode;
@@ -89,7 +92,13 @@ public class KdTree {
         queue.enqueue(root);
         while (!queue.isEmpty()) {
             Node current = queue.dequeue();
-            current.rect.draw();
+            //current.rect.draw();
+            current.p.draw();
+            if (current.red) {
+                StdDraw.line(current.p.x(), current.rect.ymax(), current.p.x(), current.rect.ymin());
+            } else {
+                StdDraw.line(current.rect.xmax(), current.p.y(), current.rect.xmin(), current.p.y());
+            }
             if (current.lb != null) {
                 queue.enqueue(current.lb);
             }
@@ -99,13 +108,42 @@ public class KdTree {
         }
     }
 
-
     public Iterable<Point2D> range(RectHV rect) {
-        return null;
+        Queue<Node> queue = new Queue<>();
+        ArrayList<Point2D> result = new ArrayList<>();
+        queue.enqueue(root);
+        while (!queue.isEmpty()) {
+            Node current = queue.dequeue();
+            if (rect.contains(current.p)) {
+                result.add(current.p);
+            }
+            if (current.lb != null && current.lb.rect.intersects(rect)) {
+                queue.enqueue(current.lb);
+            }
+            if (current.rt != null && current.rt.rect.intersects(rect)) {
+                queue.enqueue(current.rt);
+            }
+        }
+        return result;
     }
 
     public Point2D nearest(Point2D p) {
-        return null;
+        Queue<Node> queue = new Queue<>();
+        Point2D nearest = root.p;
+        queue.enqueue(root);
+        while (!queue.isEmpty()) {
+            Node current = queue.dequeue();
+            if (current.p.distanceTo(p) < nearest.distanceTo(p)) {
+                nearest = current.p;
+            }
+            if (current.lb != null && current.lb.rect.distanceTo(p) < nearest.distanceTo(p)) {
+                queue.enqueue(current.lb);
+            }
+            if (current.rt != null && current.rt.rect.distanceTo(p) < nearest.distanceTo(p)) {
+                queue.enqueue(current.rt);
+            }
+        }
+        return nearest;
     }
 
     private static class Node {
@@ -113,6 +151,7 @@ public class KdTree {
         private RectHV rect;
         private Node lb;
         private Node rt;
+        private boolean red;
 
         public Node(Point2D p) {
             this.p = p;
@@ -121,14 +160,22 @@ public class KdTree {
 
     public static void main(String[] args) {
         KdTree kdTree = new KdTree();
-        System.out.println(kdTree.isEmpty());
-        kdTree.insert(new Point2D(2,1));
-        kdTree.insert(new Point2D(1,133));
-        kdTree.insert(new Point2D(1,2));
-        kdTree.insert(new Point2D(1,133));
-        System.out.println(kdTree.contains(new Point2D(2,1)));
-        System.out.println(kdTree.root.lb.lb.p.y());
-        System.out.println(kdTree.size());
+        In in = new In("data/kdtree/circle10.txt");
+        int count = 0;
+        /*while (count < 10) {
+            count++;
+            kdTree.insert(new Point2D(in.readDouble(), in.readDouble()));
+        }*/
+        RectHV r = new RectHV(0.8, 0.5, 1, 0.7);
+        kdTree.insert(new Point2D(0.7, 0.2));
+        kdTree.insert(new Point2D(0.5, 0.4));
+        kdTree.insert(new Point2D(0.2, 0.3));
+        kdTree.insert(new Point2D(0.4, 0.7));
+        kdTree.insert(new Point2D(0.9, 0.6));
         kdTree.draw();
+        System.out.println(kdTree.size());
+        //System.out.println(kdTree.nearest(new Point2D(0.1, 0.1)));
+        /*System.out.println(kdTree.range(r));
+        r.draw();*/
     }
 }

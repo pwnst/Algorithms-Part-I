@@ -14,17 +14,22 @@ package w5; /*******************************************************************
  *
  ******************************************************************************/
 
+import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdOut;
 
 public class KdTreeGenerator {
 
     public static void main(String[] args) {
-        int N = Integer.parseInt(args[0]);
+        //int N = Integer.parseInt(args[0]);
+        KdTree kdTree = new KdTree();
+        int N = 10000;
         for (int i = 0; i < N; i++) {
             double x = StdRandom.uniform(0.0, 1.0);
             double y = StdRandom.uniform(0.0, 1.0);
             StdOut.printf("%8.6f %8.6f\n", x, y);
+            kdTree.insert(new Point2D(x, y));
         }
+        System.out.println(kdTree.size());
     }
 }

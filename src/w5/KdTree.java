@@ -8,6 +8,8 @@ import java.util.ArrayList;
 public class KdTree {
     private Node root = null;
     private int size;
+    private Point2D champion;
+    private double minDist;
 
     public KdTree() {
     }
@@ -67,21 +69,18 @@ public class KdTree {
     }
 
     public boolean contains(Point2D p) {
-        Node node = root;
-        int level = 0;
-        while (node != null) {
-            if (node.p.equals(p)) {
+        Queue<Node> queue = new Queue<>();
+        queue.enqueue(root);
+        while (!queue.isEmpty()) {
+            Node current = queue.dequeue();
+            if (current.p.equals(p)) {
                 return true;
             }
-            int cmp = (level % 2 == 0) ? Double.compare(p.x(), node.p.x()) : Double.compare(p.y(), node.p.y());
-            if (cmp > 0) {
-                node = node.rt;
-                level++;
-            } else if (cmp < 0) {
-                node = node.lb;
-                level++;
-            } else {
-                level++;
+            if (current.lb != null && current.lb.rect.contains(p)) {
+                queue.enqueue(current.lb);
+            }
+            if (current.rt != null && current.rt.rect.contains(p)) {
+                queue.enqueue(current.rt);
             }
         }
         return false;
@@ -126,6 +125,65 @@ public class KdTree {
         }
         return result;
     }
+
+/*    public Point2D nearest(Point2D p) {
+        if (root == null) {
+            return null;
+        }
+        champion = root.p;
+        minDist = root.p.distanceSquaredTo(p);
+        nearest(root, p);
+        return champion;
+    }
+
+    private void nearest(Node node, Point2D query) {
+
+        // check if node is a new champion
+        double dist = node.p.distanceSquaredTo(query);
+        if (dist < minDist) {
+            champion = node.p;
+            minDist = dist;
+        }
+
+        // both nodes exist
+        if (node.lb != null && node.rt != null) {
+
+            // compute distances to query point
+            double left = node.lb.rect.distanceSquaredTo(query);
+            double right = node.rt.rect.distanceSquaredTo(query);
+
+            // alternate searching based on smaller query distances
+            if (left < right) {
+                nearest(node.lb, query);
+                // prune right node if distance is less than minimum
+                if (right < minDist)
+                    nearest(node.rt, query);
+            } else {
+                nearest(node.rt, query);
+                // prune left node if distance is less than minimum
+                if (left < minDist)
+                    nearest(node.lb, query);
+            }
+            return;
+        }
+
+        // left node exists
+        if (node.lb != null) {
+            // prune left node if distance is less than minimum
+            if (node.lb.rect.distanceSquaredTo(query) < minDist) {
+                nearest(node.lb, query);
+            }
+        }
+
+        // right node exists
+        if (node.rt != null) {
+            // prune right node if distance is less than minimum
+            if (node.rt.rect.distanceSquaredTo(query) < minDist) {
+                nearest(node.rt, query);
+            }
+        }
+        return;
+    }*/
 
     public Point2D nearest(Point2D p) {
         Queue<Node> queue = new Queue<>();
@@ -172,8 +230,8 @@ public class KdTree {
         kdTree.insert(new Point2D(0.2, 0.3));
         kdTree.insert(new Point2D(0.4, 0.7));
         kdTree.insert(new Point2D(0.9, 0.6));
-        kdTree.draw();
-        System.out.println(kdTree.size());
+//        kdTree.draw();
+        System.out.println(kdTree.contains(new Point2D(0.9, 0.6)));
         //System.out.println(kdTree.nearest(new Point2D(0.1, 0.1)));
         /*System.out.println(kdTree.range(r));
         r.draw();*/
